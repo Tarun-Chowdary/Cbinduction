@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CameraBuff Induction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #c41e3a 0%, #8B0000 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .corner-logo {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .corner-logo.left {
+            top: 20px;
+            left: 20px;
+        }
+
+        .corner-logo.right {
+            top: 20px;
+            right: 20px;
+        }
+
+        h1 {
+            color: #dc2626;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+            margin-top: 60px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #dc2626;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(220, 38, 38, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .ticket {
+            display: none;
+            text-align: center;
+            margin-top: 65px;
+            padding: 30px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #404040 100%);
+            border-radius: 15px;
+        }
+
+        .ticket.show {
+            display: block;
+        }
+
+        .ticket h2 {
+            color: #dc2626;
+            margin-bottom: 20px;
+        }
+
+        #qrcode {
+            display: inline-block;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        #qrcode img {
+            width: 200px;
+            height: 200px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .qr-message {
+            color: #dc2626;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .ticket-info {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .ticket-info p {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .ticket-info strong {
+            color: #dc2626;
+        }
+
+        .download-btn {
+            background: #10b981;
+            margin-top: 15px;
+        }
+
+        .download-btn:hover {
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .new-registration-btn {
+            background: #1a1a1a;
+            margin-top: 10px;
+        }
+
+        .admin-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .admin-btn {
+            background: #fa0505;
+        }
+
+        .admin-btn:hover {
+            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .registrations-count {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="corner-logo left" src="cb_logo.png" alt="CameraBuff Logo">
+        <img class="corner-logo right" src="clg_logo.png" alt="College Logo">
+        
+        <div id="registration-form">
+            <h1>🎟️ CameraBuff Induction Registration</h1>
+            <p class="subtitle">Fill in your details to get your entry ticket</p>
+            
+            <form id="eventForm">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department *</label>
+                    <select id="department" required>
+                        <option value="">Select Department</option>
+                        <option value="Computer Science And Technology">Computer Science And Technology</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Electrical Engineering">Electrical Engineering</option>
+                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                        <option value="Metallurgy And Materials Engineering">Metallurgy And Materials Engineering</option>
+                        <option value="Civil Engineering">Civil Engineering</option>
+                        <option value="Electronics And Telecommunication Engineering">Electronics And Telecommunication Engineering</option>
+                        <option value="Mining Engineering">Mining Engineering</option>
+                        <option value="Aerospace Engineering And Applied Mechanics">Aerospace Engineering And Applied Mechanics</option>
+                        <option value="Architecture">Architecture</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Gsuite ID</label>
+                    <input type="email" id="email" required placeholder="your.email@students.iiests.ac.in">
+                </div>
+
+                <button type="submit">Generate My Ticket</button>
+            </form>
+
+            <div class="admin-section">
+                <button class="admin-btn" onclick="downloadAllData()">📊 Download All Registrations (Admin)</button>
+              <!-- <p class="registrations-count" id="count">Total Registrations: 0</p> -->
+            </div>
+        </div>
+
+        <div class="ticket" id="ticket">
+            <h2>✅ Registration Successful!</h2>
+            <p style="color: white;">Your entry ticket is ready</p>
+            
+            <div id="qrcode"></div>
+            
+            <div class="ticket-info" id="ticketInfo"></div>
+            
+            <button class="download-btn" onclick="downloadTicket()">💾 Download Ticket</button>
+        </div>
+    </div>
+    <script>
+        let registrations = [];
+        let currentRegistration = null;
+
+        function loadRegistrations() {
+            const saved = localStorage.getItem('eventRegistrations');
+            if (saved) {
+                registrations = JSON.parse(saved);
+            }
+            updateCount();
+        }
+
+        function updateCount() {
+            const el = document.getElementById('count');
+            if (el) {
+                el.textContent = `Total Registrations: ${registrations.length}`;
+            }
+        }
+
+        function generateUniqueId() {
+            return 'CB' + Date.now();
+        }
+
+        document.getElementById('eventForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const department = document.getElementById('department').value;
+            const email = document.getElementById('email').value;
+            const ticketId = generateUniqueId();
+            const timestamp = new Date().toLocaleString();
+
+            currentRegistration = {
+                ticketId,
+                name,
+                department,
+                email,
+                timestamp
+            };
+
+            registrations.push(currentRegistration);
+            localStorage.setItem('eventRegistrations', JSON.stringify(registrations));
+            updateCount();
+
+            // Display Instagram QR code with follow message
+            document.getElementById('qrcode').innerHTML = `
+                <img src="cb_ig_handle.png" alt="Follow us on Instagram">
+                <p class="qr-message">Follow @camerabuff_iiests on Instagram!</p>
+            `;
+
+            document.getElementById('ticketInfo').innerHTML = `
+                <p><strong>Ticket ID:</strong> ${ticketId}</p>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Department:</strong> ${department}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Registered:</strong> ${timestamp}</p>
+            `;
+
+            document.getElementById('registration-form').style.display = 'none';
+            document.getElementById('ticket').classList.add('show');
+        });
+
+        function downloadTicket() {
+            if (!currentRegistration) return;
+            
+            const finalCanvas = document.createElement('canvas');
+            const ctx = finalCanvas.getContext('2d');
+            
+            finalCanvas.width = 600;
+            finalCanvas.height = 900;
+            
+            // White background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+            
+            // Red header
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(0, 0, finalCanvas.width, 120);
+            
+            // Header text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 32px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('CameraBuff Induction', finalCanvas.width / 2, 50);
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('Entry Ticket', finalCanvas.width / 2, 90);
+            
+            // Load and draw Instagram QR code
+            const qrImg = document.querySelector('#qrcode img');
+            if (qrImg) {
+                ctx.drawImage(qrImg, 200, 150, 200, 200);
+                
+                // Instagram handle text
+                ctx.fillStyle = '#dc2626';
+                ctx.font = 'bold 24px Arial';
+                ctx.fillText('Follow @camerabuff_iiests', finalCanvas.width / 2, 380);
+            }
+            
+            // Ticket details
+            ctx.fillStyle = '#000000';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'left';
+            
+            ctx.fillText('Ticket ID:', 50, 450);
+            ctx.font = '22px Arial';
+            ctx.fillText(currentRegistration.ticketId, 50, 480);
+            
+            ctx.font = 'bold 22px Arial';
+            ctx.fillText('Name:', 50, 530);
+            ctx.font = '22px Arial';
+            ctx.fillText(currentRegistration.name, 50, 560);
+            
+            ctx.font = 'bold 22px Arial';
+            ctx.fillText('Department:', 50, 610);
+            ctx.font = '20px Arial';
+            const dept = currentRegistration.department;
+            if (dept.length > 40) {
+                ctx.fillText(dept.substring(0, 40), 50, 640);
+                ctx.fillText(dept.substring(40), 50, 665);
+            } else {
+                ctx.fillText(dept, 50, 640);
+            }
+            
+            ctx.font = 'bold 22px Arial';
+            ctx.fillText('Email:', 50, 710);
+            ctx.font = '20px Arial';
+            ctx.fillText(currentRegistration.email, 50, 740);
+            
+            // Welcome message
+            ctx.fillStyle = '#dc2626';
+            ctx.font = 'italic bold 24px Arial';
+            ctx.textAlign = 'center';
+            const firstName = currentRegistration.name.split(' ')[0];
+            ctx.fillText(`Looking forward to see you, ${firstName}!`, finalCanvas.width / 2, 800);
+            
+            // Footer
+            ctx.fillStyle = '#666666';
+            ctx.font = '18px Arial';
+            ctx.fillText('Please present this ticket at the venue', finalCanvas.width / 2, 850);
+            
+            // Download
+            const link = document.createElement('a');
+            link.download = `CameraBuff_Ticket_${currentRegistration.name.replace(/\s/g, '_')}.png`;
+            link.href = finalCanvas.toDataURL();
+            link.click();
+        }
+        function downloadAllData() {
+            if (registrations.length === 0) {
+                alert('No registrations yet!');
+                return;
+            }
+
+            const password = prompt('Enter admin password to download registrations:');
+            
+            if (password !== 'camerabuff2025') {
+                alert('Incorrect password!');
+                return;
+            }
+
+            let csv = 'Ticket ID,Name,Department,Email,Registration Time\n';
+            registrations.forEach(reg => {
+                csv += `"${reg.ticketId}","${reg.name}","${reg.department}","${reg.email}","${reg.timestamp}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `camerabuff_registrations_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        loadRegistrations();
+    </script>
+   
+</body>
+</html>
